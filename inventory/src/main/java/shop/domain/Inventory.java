@@ -41,7 +41,10 @@ public class Inventory {
             .findById(orderPlaced.getProductId())
             .ifPresent(inventory -> {
                 inventory.setStockRemain(
-                    inventory.getStockRemain() - orderPlaced.getQty()
+                    Long.toString(
+                        Long.parseLong(inventory.getStockRemain()) -
+                        Long.parseLong(orderPlaced.getQty())
+                    )
                 );
                 repository().save(inventory);
 
