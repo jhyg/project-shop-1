@@ -35,29 +35,19 @@ public class Inventory {
 
     //<<< Clean Arch / Port Method
     public static void orderPlaced(OrderPlaced orderPlaced) {
-        //implement business logic here:
+        repository()
+            .findById(orderPlaced.getProductId())
+            .ifPresent(inventory -> {
+                inventory.setStockRemain(
+                    inventory.getStockRemain() - orderPlaced.getQty()
+                );
+                repository().save(inventory);
 
-        /** Example 1:  new item 
-        Inventory inventory = new Inventory();
-        repository().save(inventory);
-
-        InventoryUpdated inventoryUpdated = new InventoryUpdated(inventory);
-        inventoryUpdated.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderPlaced.get???()).ifPresent(inventory->{
-            
-            inventory // do something
-            repository().save(inventory);
-
-            InventoryUpdated inventoryUpdated = new InventoryUpdated(inventory);
-            inventoryUpdated.publishAfterCommit();
-
-         });
-        */
-
+                InventoryUpdated inventoryUpdated = new InventoryUpdated(
+                    inventory
+                );
+                inventoryUpdated.publishAfterCommit();
+            });
     }
     //>>> Clean Arch / Port Method
 

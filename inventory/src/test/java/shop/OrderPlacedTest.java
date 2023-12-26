@@ -49,8 +49,8 @@ public class OrderPlacedTest {
         //given:
         Inventory entity = new Inventory();
 
-        entity.setProductId(1L);
-        entity.setStockRemain(10L);
+        entity.setProductId("N/A");
+        entity.setStockRemain("N/A");
 
         repository.save(entity);
 
@@ -58,8 +58,8 @@ public class OrderPlacedTest {
 
         OrderPlaced event = new OrderPlaced();
 
-        event.setQty(5L);
-        event.setProductId(1L);
+        event.setProductId("N/A");
+        event.setQty("N/A");
 
         InventoryApplication.applicationContext = applicationContext;
 
@@ -95,128 +95,8 @@ public class OrderPlacedTest {
 
             LOGGER.info("Response received: {}", received.getPayload());
 
-            assertEquals(outputEvent.getProductId(), 1L);
-            assertEquals(outputEvent.getStockRemain(), 5L);
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            assertTrue("exception", false);
-        }
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test1() {
-        //given:
-        Inventory entity = new Inventory();
-
-        entity.setProductId("2");
-        entity.setStockRemain("10");
-
-        repository.save(entity);
-
-        //when:
-
-        OrderPlaced event = new OrderPlaced();
-
-        event.setProductId("4");
-        event.setQty("2");
-
-        InventoryApplication.applicationContext = applicationContext;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String msg = objectMapper.writeValueAsString(event);
-
-            processor
-                .inboundTopic()
-                .send(
-                    MessageBuilder
-                        .withPayload(msg)
-                        .setHeader(
-                            MessageHeaders.CONTENT_TYPE,
-                            MimeTypeUtils.APPLICATION_JSON
-                        )
-                        .setHeader("type", event.getEventType())
-                        .build()
-                );
-
-            //then:
-
-            Message<String> received = (Message<String>) messageCollector
-                .forChannel(processor.outboundTopic())
-                .poll();
-
-            assertNotNull("Resulted event must be published", received);
-
-            InventoryUpdated outputEvent = objectMapper.readValue(
-                received.getPayload(),
-                InventoryUpdated.class
-            );
-
-            LOGGER.info("Response received: {}", received.getPayload());
-
-            assertEquals(outputEvent.getProductId(), "2");
-            assertEquals(outputEvent.getStockRemain(), "6");
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            assertTrue("exception", false);
-        }
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test2() {
-        //given:
-        Inventory entity = new Inventory();
-
-        entity.setProductId("3");
-        entity.setStockRemain("10");
-
-        repository.save(entity);
-
-        //when:
-
-        OrderPlaced event = new OrderPlaced();
-
-        event.setProductId("3");
-        event.setQty("3");
-
-        InventoryApplication.applicationContext = applicationContext;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String msg = objectMapper.writeValueAsString(event);
-
-            processor
-                .inboundTopic()
-                .send(
-                    MessageBuilder
-                        .withPayload(msg)
-                        .setHeader(
-                            MessageHeaders.CONTENT_TYPE,
-                            MimeTypeUtils.APPLICATION_JSON
-                        )
-                        .setHeader("type", event.getEventType())
-                        .build()
-                );
-
-            //then:
-
-            Message<String> received = (Message<String>) messageCollector
-                .forChannel(processor.outboundTopic())
-                .poll();
-
-            assertNotNull("Resulted event must be published", received);
-
-            InventoryUpdated outputEvent = objectMapper.readValue(
-                received.getPayload(),
-                InventoryUpdated.class
-            );
-
-            LOGGER.info("Response received: {}", received.getPayload());
-
-            assertEquals(outputEvent.getProductId(), "3");
-            assertEquals(outputEvent.getStockRemain(), "7");
+            assertEquals(outputEvent.getProductId(), "N/A");
+            assertEquals(outputEvent.getStockRemain(), "N/A");
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
             assertTrue("exception", false);

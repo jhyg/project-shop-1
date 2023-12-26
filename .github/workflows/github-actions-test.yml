@@ -1,0 +1,13 @@
+name: test
+run-name: testing 
+on: [push]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Test
+      run: |
+        mvn test -f ./inventory
