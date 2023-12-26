@@ -51,6 +51,11 @@ public class Inventory {
                 InventoryUpdated inventoryUpdated = new InventoryUpdated(
                     inventory
                 );
+
+                inventoryUpdated.setStockRemain(
+                    inventory.getStockRemain().toString()
+                );
+
                 inventoryUpdated.publishAfterCommit();
             });
     }
