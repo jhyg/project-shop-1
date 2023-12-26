@@ -11,7 +11,6 @@ import shop.domain.InventoryUpdated;
 @Entity
 @Table(name = "Inventory_table")
 @Data
-//<<< DDD / Aggregate Root
 public class Inventory {
 
     @Id
@@ -26,6 +25,10 @@ public class Inventory {
         inventoryUpdated.publishAfterCommit();
     }
 
+    public void setStockRemain(String stockRemain) {
+        this.stockRemain = Long.parseLong(stockRemain);
+    }
+
     public static InventoryRepository repository() {
         InventoryRepository inventoryRepository = InventoryApplication.applicationContext.getBean(
             InventoryRepository.class
@@ -33,7 +36,6 @@ public class Inventory {
         return inventoryRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void orderPlaced(OrderPlaced orderPlaced) {
         repository()
             .findById(orderPlaced.getProductId())
@@ -49,7 +51,4 @@ public class Inventory {
                 inventoryUpdated.publishAfterCommit();
             });
     }
-    //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root
