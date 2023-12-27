@@ -99,7 +99,7 @@ public class OrderPlacedTest {
             assertEquals(outputEvent.getStockRemain(), "N/A");
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
-            throw new RuntimeException("JsonProcessingException occurred", e);
+            assertTrue("exception", false);
         }
     }
 }
