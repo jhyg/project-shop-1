@@ -37,26 +37,16 @@ public class Inventory {
     }
 
     public static void orderPlaced(OrderPlaced orderPlaced) {
-        repository()
-            .findById(Long.parseLong(orderPlaced.getProductId()))
-            .ifPresent(inventory -> {
-                inventory.setStockRemain(
-                    Long.toString(
-                        Long.parseLong(inventory.getStockRemain()) -
-                        Long.parseLong(orderPlaced.getQty())
-                    )
-                );
-                repository().save(inventory);
-
-                InventoryUpdated inventoryUpdated = new InventoryUpdated(
-                    inventory
-                );
-
-                inventoryUpdated.setStockRemain(
-                    inventory.getStockRemain().toString()
-                );
-
-                inventoryUpdated.publishAfterCommit();
-            });
+        Inventory inventory = repository()
+            .findById(orderPlaced.getProductId())
+            .orElse(null);
+        if (inventory != null) {
+            Long newStockRemain =
+                inventory.getStockRemain() - orderPlaced.getQty();
+            inventory.setStockRemain(newStockRemain.toString());
+            repository().save(inventory);
+            InventoryUpdated inventoryUpdated = new InventoryUpdated(inventory);
+            inventoryUpdated.publishAfterCommit();
+        }
     }
 }
