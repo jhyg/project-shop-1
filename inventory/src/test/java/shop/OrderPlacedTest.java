@@ -20,7 +20,6 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MimeTypeUtils;
-import shop.config.kafka.KafkaProcessor;
 import shop.domain.*;
 
 @RunWith(SpringRunner.class)
@@ -72,6 +71,9 @@ public class OrderPlacedTest {
             Message<String> received = (Message<String>) messageCollector
                 .forChannel(processor.outboundTopic())
                 .poll();
+            if (received == null) {
+                throw new RuntimeException("Event not published");
+            }
             assertNotNull("Resulted event must be published", received);
             InventoryUpdated outputEvent = objectMapper.readValue(
                 received.getPayload(),
@@ -84,7 +86,7 @@ public class OrderPlacedTest {
                 entity.getStockRemain().intValue() - event.getQty().intValue()
             );
         } catch (JsonProcessingException e) {
-            assertTrue("exception", false);
+            throw new RuntimeException("JSON processing failed", e);
         }
     }
 }
