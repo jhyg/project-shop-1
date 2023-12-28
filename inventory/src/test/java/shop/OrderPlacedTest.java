@@ -28,7 +28,7 @@ import shop.domain.*;
 public class OrderPlacedTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(
-        OrderPlacedTest.class
+        EventTest.class
     );
 
     @Autowired
@@ -49,8 +49,8 @@ public class OrderPlacedTest {
         //given:
         Inventory entity = new Inventory();
 
-        entity.setProductId(999L);
-        entity.setStockRemain(999L);
+        entity.setProductId("N/A");
+        entity.setStockRemain("N/A");
 
         repository.save(entity);
 
@@ -58,8 +58,8 @@ public class OrderPlacedTest {
 
         OrderPlaced event = new OrderPlaced();
 
-        event.setProductId(999L);
-        event.setQty(1L);
+        event.setProductId("N/A");
+        event.setQty("N/A");
 
         InventoryApplication.applicationContext = applicationContext;
 
@@ -95,8 +95,12 @@ public class OrderPlacedTest {
 
             LOGGER.info("Response received: {}", received.getPayload());
 
-            assertEquals(outputEvent.getProductId(), Long.valueOf(999));
-            assertEquals(outputEvent.getStockRemain(), Long.valueOf(999));
+            //test //readonly
+            //test //readonly
+            //test //readonly
+
+            assertEquals(outputEvent.getProductId(), "N/A");
+            assertEquals(outputEvent.getStockRemain(), "N/A");
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
             assertTrue("exception", false);
