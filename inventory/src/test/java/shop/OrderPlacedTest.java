@@ -50,7 +50,7 @@ public class OrderPlacedTest {
         Inventory entity = new Inventory();
 
         entity.setProductId(1L);
-        entity.setStockRemain(1L);
+        entity.setStockRemain(2L);
 
         repository.save(entity);
 
