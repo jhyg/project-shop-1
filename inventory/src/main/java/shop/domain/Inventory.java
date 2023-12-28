@@ -2,11 +2,8 @@ package shop.domain;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.*;
-import lombok.Data;
-import shop.InventoryApplication;
-import shop.domain.InventoryUpdated;
+import lombok.*;
 
 @Entity
 @Table(name = "Inventory_table")
@@ -40,7 +37,6 @@ public class Inventory {
                     inventory.getStockRemain() - orderPlaced.getQty()
                 );
                 repository().save(inventory);
-
                 InventoryUpdated inventoryUpdated = new InventoryUpdated(
                     inventory
                 );

@@ -28,7 +28,7 @@ import shop.domain.*;
 public class OrderPlacedTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(
-        OrderPlacedTest.class
+        EventTest.class
     );
 
     @Autowired
@@ -46,27 +46,17 @@ public class OrderPlacedTest {
     @Test
     @SuppressWarnings("unchecked")
     public void test0() {
-        //given:
         Inventory entity = new Inventory();
-
         entity.setProductId(1L);
-        entity.setStockRemain(2L);
-
+        entity.setStockRemain(10L);
         repository.save(entity);
-
-        //when:
-
         OrderPlaced event = new OrderPlaced();
-
         event.setProductId(1L);
         event.setQty(1L);
-
         InventoryApplication.applicationContext = applicationContext;
-
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String msg = objectMapper.writeValueAsString(event);
-
             processor
                 .inboundTopic()
                 .send(
@@ -79,26 +69,21 @@ public class OrderPlacedTest {
                         .setHeader("type", event.getEventType())
                         .build()
                 );
-
-            //then:
-
             Message<String> received = (Message<String>) messageCollector
                 .forChannel(processor.outboundTopic())
                 .poll();
-
             assertNotNull("Resulted event must be published", received);
-
             InventoryUpdated outputEvent = objectMapper.readValue(
                 received.getPayload(),
                 InventoryUpdated.class
             );
-
             LOGGER.info("Response received: {}", received.getPayload());
-
-            assertEquals(outputEvent.getProductId(), Long.valueOf(1));
-            assertEquals(outputEvent.getStockRemain(), Long.valueOf(1));
+            assertEquals(outputEvent.getProductId(), event.getProductId());
+            assertEquals(
+                outputEvent.getStockRemain().intValue(),
+                entity.getStockRemain().intValue() - event.getQty().intValue()
+            );
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             assertTrue("exception", false);
         }
     }
