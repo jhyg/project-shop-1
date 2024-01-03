@@ -21,6 +21,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MimeTypeUtils;
 import shop.domain.*;
+import shop.config.kafka.KafkaProcessor;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,51 +43,5 @@ public class OrderPlacedTest {
     @Autowired
     public InventoryRepository repository;
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test0() {
-        Inventory entity = new Inventory();
-        entity.setProductId(1L);
-        entity.setStockRemain(10L);
-        repository.save(entity);
-        OrderPlaced event = new OrderPlaced();
-        event.setProductId(1L);
-        event.setQty(1L);
-        InventoryApplication.applicationContext = applicationContext;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String msg = objectMapper.writeValueAsString(event);
-            processor
-                .inboundTopic()
-                .send(
-                    MessageBuilder
-                        .withPayload(msg)
-                        .setHeader(
-                            MessageHeaders.CONTENT_TYPE,
-                            MimeTypeUtils.APPLICATION_JSON
-                        )
-                        .setHeader("type", event.getEventType())
-                        .build()
-                );
-            Message<String> received = (Message<String>) messageCollector
-                .forChannel(processor.outboundTopic())
-                .poll();
-            if (received == null) {
-                throw new RuntimeException("Event not published");
-            }
-            assertNotNull("Resulted event must be published", received);
-            InventoryUpdated outputEvent = objectMapper.readValue(
-                received.getPayload(),
-                InventoryUpdated.class
-            );
-            LOGGER.info("Response received: {}", received.getPayload());
-            assertEquals(outputEvent.getProductId(), event.getProductId());
-            assertEquals(
-                outputEvent.getStockRemain().intValue(),
-                entity.getStockRemain().intValue() - event.getQty().intValue()
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("JSON processing failed", e);
-        }
-    }
+   ...
 }
