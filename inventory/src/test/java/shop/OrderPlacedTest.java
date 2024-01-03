@@ -42,4 +42,9 @@ public class OrderPlacedTest {
 
     @Autowired
     public InventoryRepository repository;
+
+    @Test
+    public void orderTest() {
+        /* test logic goes here */
+    }
 }
