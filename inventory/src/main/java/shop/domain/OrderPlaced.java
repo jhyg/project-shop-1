@@ -11,8 +11,4 @@ public class OrderPlaced extends AbstractEvent {
 
     private Long productId;
     private Long qty;
-
-    public void placeOrder() {
-        Inventory.orderPlaced(this);
-    }
 }
