@@ -28,7 +28,7 @@ import shop.domain.*;
 public class OrderPlacedTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(
-        EventTest.class
+        OrderPlacedTest.class
     );
 
     @Autowired
