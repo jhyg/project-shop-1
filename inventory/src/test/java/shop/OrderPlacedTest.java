@@ -46,26 +46,19 @@ public class OrderPlacedTest {
     @Test
     @SuppressWarnings("unchecked")
     public void test0() {
-        //given:
         Inventory entity = new Inventory();
-        entity.setProductId("N/A");
-        entity.setStockRemain("N/A");
-
+        entity.setProductId(1L);
+        entity.setStockRemain(100L);
         repository.save(entity);
 
-        //when:
-
         OrderPlaced event = new OrderPlaced();
-
-        event.setProductId("N/A");
-        event.setQty("N/A");
-
+        event.setProductId(1L);
+        event.setQty(10L);
         InventoryApplication.applicationContext = applicationContext;
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String msg = objectMapper.writeValueAsString(event);
-
             processor
                 .inboundTopic()
                 .send(
@@ -79,29 +72,18 @@ public class OrderPlacedTest {
                         .build()
                 );
 
-            //then:
-
             Message<String> received = (Message<String>) messageCollector
                 .forChannel(processor.outboundTopic())
                 .poll();
-
             assertNotNull("Resulted event must be published", received);
-
             InventoryUpdated outputEvent = objectMapper.readValue(
                 received.getPayload(),
                 InventoryUpdated.class
             );
-
             LOGGER.info("Response received: {}", received.getPayload());
-
-            //test //readonly
-            //test //readonly
-            //test //readonly
-
-            assertEquals(outputEvent.getProductId(), "N/A");
-            assertEquals(outputEvent.getStockRemain(), "N/A");
+            assertEquals(outputEvent.getProductId(), event.getProductId());
+            assertEquals(outputEvent.getStockRemain(), Long.valueOf(90L));
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             assertTrue("exception", false);
         }
     }
