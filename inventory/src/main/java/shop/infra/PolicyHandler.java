@@ -30,13 +30,18 @@ public class PolicyHandler {
     public void wheneverOrderPlaced_OrderPlaced(
         @Payload OrderPlaced orderPlaced
     ) {
-        OrderPlaced event = orderPlaced;
-        System.out.println(
-            "\n\n##### listener OrderPlaced : " + orderPlaced + "\n\n"
-        );
+        try {
+            OrderPlaced event = orderPlaced;
+            System.out.println(
+                "\n\n##### listener OrderPlaced : " + orderPlaced + "\n\n"
+            );
 
-        // Sample Logic //
-        Inventory.orderPlaced(event);
+            // Sample Logic //
+            Inventory.orderPlaced(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
 //>>> Clean Arch / Inbound Adaptor
