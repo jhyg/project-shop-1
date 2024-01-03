@@ -45,6 +45,25 @@ public class OrderPlacedTest {
 
     @Test
     public void orderTest() {
-        /* test logic goes here */
+        OrderPlaced order = new OrderPlaced();
+        order.setProductId(1L);
+        order.setQty(1L);
+
+        Message message = MessageBuilder
+            .withPayload(order)
+            .setHeader(
+                MessageHeaders.CONTENT_TYPE,
+                MimeTypeUtils.APPLICATION_JSON
+            )
+            .build();
+        processor.outboundTopic().send(message);
+
+        OrderPlaced result = (OrderPlaced) messageCollector
+            .forChannel(processor.inboundTopic())
+            .poll()
+            .getPayload();
+        assertNotNull(result);
+        assertEquals(order.getProductId(), result.getProductId());
+        assertEquals(order.getQty(), result.getQty());
     }
 }
