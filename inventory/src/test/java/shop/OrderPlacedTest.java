@@ -20,8 +20,8 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MimeTypeUtils;
-import shop.domain.*;
 import shop.config.kafka.KafkaProcessor;
+import shop.domain.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,6 +42,4 @@ public class OrderPlacedTest {
 
     @Autowired
     public InventoryRepository repository;
-
-   ...
-}
+} // 부족한 부분에 대한 수정이 필요
