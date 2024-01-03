@@ -28,7 +28,7 @@ import shop.domain.*;
 public class OrderPlacedTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(
-        EventTest.class
+        OrderPlacedTest.class
     );
 
     @Autowired
@@ -42,4 +42,4 @@ public class OrderPlacedTest {
 
     @Autowired
     public InventoryRepository repository;
-} // 부족한 부분에 대한 수정이 필요
+}
