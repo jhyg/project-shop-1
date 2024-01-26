@@ -33,12 +33,24 @@ public class Inventory {
     }
 
     public static void orderPlaced(OrderPlaced orderPlaced) {
+        if (
+            orderPlaced == null ||
+            orderPlaced.getProductId() == null ||
+            orderPlaced.getQty() == null
+        ) {
+            throw new IllegalArgumentException(
+                "OrderPlaced event was null or contained null fields."
+            );
+        }
+        Long orderedProduct = orderPlaced.getProductId();
+        Long orderedQty = orderPlaced.getQty();
+
         repository()
-            .findById(orderPlaced.getProductId())
+            .findById(orderedProduct)
             .ifPresent(inventory -> {
-                inventory.setProductId(orderPlaced.getProductId());
+                inventory.setProductId(orderedProduct);
                 inventory.setStockRemain(
-                    inventory.getStockRemain() - orderPlaced.getQty()
+                    inventory.getStockRemain() - orderedQty
                 );
                 repository().save(inventory);
 
